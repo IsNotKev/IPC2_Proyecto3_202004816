@@ -1,6 +1,10 @@
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
+from Factura import Factura
 import json 
+
+Facturas = []
+
 app = Flask(__name__)
 CORS(app)
 
