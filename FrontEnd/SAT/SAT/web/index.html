@@ -10,9 +10,12 @@
     <title>SAT</title>
     <style type="text/css">
         body {
-            background: #141E30;  /* fallback for old browsers */
-            background: -webkit-linear-gradient(to bottom, #243B55, #141E30);  /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to bottom, #243B55, #141E30); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */                   
+            background: #141E30;
+            /* fallback for old browsers */
+            background: -webkit-linear-gradient(to bottom, #243B55, #141E30);
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to bottom, #243B55, #141E30);
+            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         }
     </style>
 </head>
@@ -27,48 +30,108 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" onclick="alert('hello')" style="cursor: pointer">Cargar
-                            Archivo</a>
-                    </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
                             Peticiones
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" style="cursor: pointer">Consultar Datos</a></li>
+                            <form action="/consultarDatos/">
+                                <li><button class="dropdown-item" style="cursor: pointer"> ConsultarDatos </button></li>
+                            </form>
                             <li><a class="dropdown-item" style="cursor: pointer">Resumen de IVA por fecha y NIT</a></li>
                             <li><a class="dropdown-item" style="cursor: pointer">Resumen por rango de fechas</a></li>
                             <li><a class="dropdown-item" style="cursor: pointer">Gráfica</a></li>
                             <li><a class="dropdown-item" style="cursor: pointer">Reporte en PDF</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" style="cursor: pointer">Ayuda</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer">
+                            Ayuda
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><button class="dropdown-item" style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#exampleModal"> Datos del Estudiante </button></li>
+                            <li><a class="dropdown-item" style="cursor: pointer">Documentación</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-    <br>
-    <button class="btn btn-outline-success" onclick="alert('hello')" style="margin-left:2%;">Enviar</button>
-    <button class="btn btn-outline-danger" onclick="alert('hello')">Reset</button>
-    <br><br>
-    <div style="width: 100%;">
-        <div class="form-floating" style="width: 47%;display: inline-block;margin-left:2%;">
-            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" style="height: 565px;width: 100%;margin-bottom: 2%;"></textarea>
-            <label for="floatingTextarea">Entrada</label>
+    <center>
+        <form action="/delete/" method="DELETE" style="display: inline-block;"><button
+                class="btn btn-outline-danger">Reset</button></form>
+        <div class="mb-3" style="margin-top:1%;display: inline-block;">
+            <input class="form-control form-control-sm" id="archivo" type="file"
+                style="width: 100%;display: inline-block;" accept=".XML">
         </div>
-        <div class="form-floating" style="width: 47%;display: inline-block;margin-left:2%;">
-            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 565px;width: 100%;margin-bottom: 2%;" disabled></textarea>
-            <label for="floatingTextarea2">Salida</label>
+    </center>
+    <form action="/enviar/" method="POST">{% csrf_token %}
+        <button class="btn btn-outline-success" style="margin-left:2%;">Enviar</button>
+
+        <br><br>
+        <div style="width: 100%;">
+            <div class="form-floating" style="width: 47%;display: inline-block;margin-left:2%;">
+                <textarea class="form-control" placeholder="Leave a comment here" id="entrada"
+                    style="height: 523px;width: 100%;margin-bottom: 2%;" name="entrada">{{entrada}}</textarea>
+                <label for="floatingTextarea">Entrada</label>
+            </div>
+            <div class="form-floating" style="width: 47%;display: inline-block;margin-left:2%;">
+                <textarea class="form-control" placeholder="Leave a comment here" id="salida"
+                    style="height: 523px;width: 100%;margin-bottom: 2%;" disabled>{{respuesta}}</textarea>
+                <label for="floatingTextarea2">Salida</label>
+            </div>
+        </div>
+    </form>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Datos del Estudiante</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group list-group-flush" style="margin-left: 20%;">
+                        <li> Kevin Steve Martinez Lemus</li>
+                        <li> 202004816</li>
+                        <li> Introducción a la Programación y Computación 2 Sección "C"</li>
+                        <li> Ingenieria en Ciencias y Sistemas</li>
+                        <li> 4to Semestre</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
     </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+        integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous">
+        </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+        integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous">
+        </script>
+    <script>
+
+        function readFile(evt) {
+            let file = evt.target.files[0];
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                // Cuando el archivo se terminó de cargar
+                document.querySelector('#entrada').value = e.target.result
+            };
+            // Leemos el contenido del archivo seleccionado
+            reader.readAsBinaryString(file);
+            document.getElementById('archivo').values = null
+        }
+        document.getElementById('archivo').addEventListener('change', readFile, false);
+    </script>
+
 </body>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
-    integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
-    crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
-    integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
-    crossorigin="anonymous"></script>
+
 </html>

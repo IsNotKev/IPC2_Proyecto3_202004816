@@ -54,7 +54,7 @@ ROOT_URLCONF = 'SAT.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['C:/Users/kevin/OneDrive/Escritorio/[IPC2]Proyecto3_202004816/FrontEnd/SAT/SAT/web'],
+        'DIRS': ['C:/Users/kevin/OneDrive/Escritorio/IPC2_Proyecto3_202004816/FrontEnd/SAT/SAT/web'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
