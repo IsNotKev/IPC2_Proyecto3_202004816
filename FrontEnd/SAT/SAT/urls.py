@@ -15,12 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from SAT.vista import index,enviar,consultar,delete
+from SAT.vista import index,enviar,consultar,delete,resumenIVA,resumenFecha
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', index),
     path('enviar/', enviar),
     path('consultarDatos/',consultar),
-    path('delete/',delete)
+    path('delete/',delete),
+    path('resumenIVA/',resumenIVA),
+    path('resumenFecha/',resumenFecha)
 ]

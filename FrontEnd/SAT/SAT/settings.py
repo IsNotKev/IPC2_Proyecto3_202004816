@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+STATICFILES_DIRS=['C:/Users/kevin/OneDrive/Escritorio/IPC2_Proyecto3_202004816/FrontEnd/SAT/SAT/static']
+
 
 # Application definition
 

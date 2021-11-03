@@ -9,6 +9,8 @@ import xml.etree.ElementTree as ET
 
 Facturas = []
 entrada = ''
+fechas = []
+graficas = ['','']
 app = Flask(__name__)
 CORS(app)
 
@@ -16,15 +18,20 @@ CORS(app)
 def rutaInicial():
     return ('Kevin Steve Martinez Lemus - 202004816')
 
-@app.route('/', methods=['POST'])
-def rutaPost():
-    return ('Este es un Post')
+@app.route('/Entrada', methods=['GET'])
+def getEntrada():
+    global entrada
+    global fechas
+    return (jsonify({'entrada':entrada,'Fechas':fechas}))
 
 @app.route('/Facturas', methods=['POST'])
 def agregarFacturas():
     global Facturas
     global entrada
+    global fechas
+
     Facturas = []
+    fechas = []
 
     referencias = []
 
@@ -54,9 +61,11 @@ def agregarFacturas():
                     encontrado = True
                     c.append(nFactura)
             if not encontrado:
+                fechas.append(fecha)
                 nuevo = [nFactura]
                 Facturas.append(nuevo)  
         else:
+            fechas.append(fecha)
             nuevo = [nFactura]
             Facturas.append(nuevo) 
 
@@ -191,7 +200,7 @@ def agregarFacturas():
     myfile = open('autorizaciones.xml', "wb")
     myfile.write(mydata)
     myfile.close()
-    return jsonify({'Mensaje':'Se guardó la información correctamente','Entrada':entrada})
+    return jsonify({'Mensaje':'Se guardó la información correctamente','Entrada':entrada,'Fechas':fechas})
 
 def comprobarNit(nit):
     cont = 2
@@ -221,21 +230,74 @@ def comprobarNit(nit):
 @app.route('/Datos', methods=['GET'])
 def consultarDatos():
     global entrada
+    global fechas
     if entrada != '':
         archivo = open('autorizaciones.xml', 'r')
         contenido = archivo.read()
         archivo.close
-        return jsonify({'Respuesta':contenido,'Entrada':entrada})
+        return jsonify({'Respuesta':contenido,'Entrada':entrada,'Fechas':fechas})
     else:
-        return jsonify({'Respuesta':'No se han ingresado facturas','Entrada':''})
+        return jsonify({'Respuesta':'No se han ingresado facturas','Entrada':'','Fechas':fechas})
 
 @app.route('/Datos', methods=['DELETE'])
 def eliminarDatos():
     global Facturas
     global entrada
+    global fechas
     Facturas = []
+    fechas = []
     entrada = ''
-    return jsonify({'Respuesta':'Reset Completado','Entrada':entrada})
+    return jsonify({'Respuesta':'Reset Completado','Entrada':entrada,'Fechas':fechas})
+
+@app.route('/resumenIVA', methods=['POST'])
+def resumenIVA():
+    global Facturas
+    global graficas
+
+    fecha = request.json['fecha']
+    graficas[0] = fecha
+    #print(fecha)
+    for factura in Facturas:
+        if factura[0].fecha == fecha:
+            objeto = []
+            for f in factura:
+                if f.codaprobacion != '':
+                    nfac = [fecha,f.nemisor,f.nreceptor,f.iva]
+                    objeto.append(nfac)
+            return jsonify({'facturas':objeto})
+
+@app.route('/resumenFecha', methods=['POST'])
+def resumenFecha():
+    global Facturas
+    global graficas
+
+    inicio = request.json['inicio']
+    fin = request.json['fin']
+    iva = request.json['iva']
+
+    n = [inicio,fin]
+    graficas[1] = n
+
+    fechainicio = inicio.split('-')
+    fechafin = fin.split('-')
+
+    objeto = []
+    print(inicio,fin,iva)
+    for factura in Facturas:
+        fechaactual = factura[0].fecha.split('/')
+        if fechaactual[0] >= fechainicio[2] and fechaactual[0] <= fechafin[2]:
+            if fechaactual[1] >= fechainicio[1] and fechaactual[1] <= fechafin[1]:
+                if fechaactual[2] >= fechainicio[0] and fechaactual[2] <= fechafin[0]:
+                    for f in factura:
+                        if f.codaprobacion != '':
+                            if iva == 'con':
+                                nfac = [f.fecha,f.codaprobacion,f.total]
+                            else:
+                                nfac = [f.fecha,f.codaprobacion,f.valor]
+                            objeto.append(nfac)
+
+    return jsonify({'facturas':objeto})        
+    
 
 
 if __name__ == "__main__":
