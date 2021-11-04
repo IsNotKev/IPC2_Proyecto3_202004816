@@ -49,7 +49,9 @@
                                     data-bs-target="#modalRango"> Resumen por rango de fechas </button></li>
                             <li><button class="dropdown-item" style="cursor: pointer" data-bs-toggle="modal"
                                     data-bs-target="#modalGraficas"> Gráfica</button></li>
-                            <li><a class="dropdown-item" style="cursor: pointer">Reporte en PDF</a></li>
+                            <form action="/reporte/" method="POST">{% csrf_token %}
+                                <button class="dropdown-item" style="cursor: pointer">Reporte en PDF</button>
+                            </form>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -60,7 +62,8 @@
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <li><button class="dropdown-item" style="cursor: pointer" data-bs-toggle="modal"
                                     data-bs-target="#exampleModal"> Datos del Estudiante </button></li>
-                            <li><a class="dropdown-item" style="cursor: pointer">Documentación</a></li>
+                            <li><button class="dropdown-item" style="cursor: pointer" data-bs-toggle="modal"
+                                    data-bs-target="#modalDocumentacion"> Documentación </button></li>
                         </ul>
                     </li>
                 </ul>
@@ -82,12 +85,12 @@
         <div style="width: 100%;">
             <div class="form-floating" style="width: 47%;display: inline-block;margin-left:2%;">
                 <textarea class="form-control" placeholder="Leave a comment here" id="entrada"
-                    style="height: 523px;width: 100%;margin-bottom: 2%;" name="entrada">{{entrada}}</textarea>
+                    style="height: 523px;width: 100%;margin-bottom: 3%;" name="entrada">{{entrada}}</textarea>
                 <label for="floatingTextarea">Entrada</label>
             </div>
             <div class="form-floating" style="width: 47%;display: inline-block;margin-left:2%;">
                 <textarea class="form-control" placeholder="Leave a comment here" id="salida"
-                    style="height: 523px;width: 100%;margin-bottom: 2%;" disabled>{{respuesta}}</textarea>
+                    style="height: 523px;width: 100%;margin-bottom: 3%;" disabled>{{respuesta}}</textarea>
                 <label for="floatingTextarea2">Salida</label>
             </div>
         </div>
@@ -109,6 +112,25 @@
                         <li> Ingenieria en Ciencias y Sistemas</li>
                         <li> 4to Semestre</li>
                     </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Documentación-->
+    <div class="modal fade" id="modalDocumentacion" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Documentación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <iframe src="{% static '/Documentación.pdf' %}" style="width:100%;height: 500px;" frameborder="0"></iframe>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -176,20 +198,19 @@
 
     <!-- Modal Gráficas -->
     <div class="modal fade" id="modalGraficas" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Gráficas</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <img src="{% static '/diagrama-dispersion.png' %}" alt="Lo que sea menos la imagen"
-                        style="color: white;display: inline-block;">
-                    <img src="{% static '/diagrama-dispersion.png' %}" alt="Lo que sea menos la imagen"
-                        style="color: white;display: inline-block;">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <h3>Resumen de IVA por fecha y NIT</h3>
+                    <img src="{% static '/resumenMovs.png' %}" alt="Lo que sea menos la imagen"
+                        style="color: white;display: inline-block;width: 100%;">
+                    <h3>Resumen por rango de fechas</h3>
+                    <img src="{% static '/resumenRango.png' %}" alt="Lo que sea menos la imagen"
+                        style="color: white;display: inline-block;width: 100%;">
                 </div>
             </div>
         </div>
@@ -216,7 +237,7 @@
         }
         document.getElementById('archivo').addEventListener('change', readFile, false);
     </script>
-
+    <!--<iframe src="{% static '/ManualDeUsuario.pdf' %}" style="width:100%; height:700px;" frameborder="0"></iframe>-->
 </body>
 
 </html>

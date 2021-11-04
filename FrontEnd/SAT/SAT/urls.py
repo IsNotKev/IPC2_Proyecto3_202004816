@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from SAT.vista import index,enviar,consultar,delete,resumenIVA,resumenFecha
+from SAT.vista import index,enviar,consultar,delete,resumenIVA,resumenFecha,reporte
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,5 +24,6 @@ urlpatterns = [
     path('consultarDatos/',consultar),
     path('delete/',delete),
     path('resumenIVA/',resumenIVA),
-    path('resumenFecha/',resumenFecha)
+    path('resumenFecha/',resumenFecha),
+    path('reporte/',reporte)
 ]

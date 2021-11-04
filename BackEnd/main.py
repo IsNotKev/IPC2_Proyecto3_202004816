@@ -1,16 +1,13 @@
-from enum import auto
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from Factura import Factura,encontrarFecha
-import json 
-import math
 import xml.etree.ElementTree as ET
+from os import remove
 
 
 Facturas = []
 entrada = ''
 fechas = []
-graficas = ['','']
 app = Flask(__name__)
 CORS(app)
 
@@ -247,15 +244,19 @@ def eliminarDatos():
     Facturas = []
     fechas = []
     entrada = ''
-    return jsonify({'Respuesta':'Reset Completado','Entrada':entrada,'Fechas':fechas})
+    try:
+        remove('autorizaciones.xml')
+        return jsonify({'Respuesta':'Reset Completado','Entrada':entrada,'Fechas':fechas})
+    except FileNotFoundError as e:
+        return jsonify({'Respuesta':'Reset Completado','Entrada':entrada,'Fechas':fechas})
+    except IOError as e:
+        return jsonify({'Respuesta':'Reset Completado','Entrada':entrada,'Fechas':fechas})
 
 @app.route('/resumenIVA', methods=['POST'])
 def resumenIVA():
     global Facturas
-    global graficas
 
     fecha = request.json['fecha']
-    graficas[0] = fecha
     #print(fecha)
     for factura in Facturas:
         if factura[0].fecha == fecha:
@@ -269,14 +270,10 @@ def resumenIVA():
 @app.route('/resumenFecha', methods=['POST'])
 def resumenFecha():
     global Facturas
-    global graficas
 
     inicio = request.json['inicio']
     fin = request.json['fin']
     iva = request.json['iva']
-
-    n = [inicio,fin]
-    graficas[1] = n
 
     fechainicio = inicio.split('-')
     fechafin = fin.split('-')
@@ -285,9 +282,9 @@ def resumenFecha():
     print(inicio,fin,iva)
     for factura in Facturas:
         fechaactual = factura[0].fecha.split('/')
-        if fechaactual[0] >= fechainicio[2] and fechaactual[0] <= fechafin[2]:
-            if fechaactual[1] >= fechainicio[1] and fechaactual[1] <= fechafin[1]:
-                if fechaactual[2] >= fechainicio[0] and fechaactual[2] <= fechafin[0]:
+        if int(fechaactual[2]) >= int(fechainicio[0]) and int(fechaactual[2]) <= int(fechafin[0]):
+            if int(fechaactual[1]) >= int(fechainicio[1]) and int(fechaactual[1]) <= int(fechafin[1]):
+                if int(fechaactual[0]) >= int(fechainicio[2]) and int(fechaactual[0]) <= int(fechafin[2]):
                     for f in factura:
                         if f.codaprobacion != '':
                             if iva == 'con':
